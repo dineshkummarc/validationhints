@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Validation Hints</title>
+<style type="text/css">
+form {
+	width:500px;
+	border:1px solid #ccc;
+}
+fieldset {
+	border:0;
+	padding:10px;
+	margin:10px;
+	position:relative;
+}
+label {
+	display:block;
+	font:normal 12px/17px verdana;
+}
+input {width:160px;}
+span.hint {
+	font:normal 11px/14px verdana;
+	background:#eee url(bg-span-hint-gray.gif) no-repeat top left;
+	color:#444;
+	border:1px solid #888;
+	padding:5px 5px 5px 40px;
+	width:250px;
+	position:absolute;
+	margin: -12px 0 0 14px;
+	display:none;
+}
+fieldset.welldone span.hint {
+	background:#9fd680 url(bg-span-hint-welldone.jpg) no-repeat top left;
+	border-color:#749e5c;
+	color:#000;
+}
+fieldset.kindagood span.hint {
+	background:#ffffcc url(bg-span-hint-kindagood.jpg) no-repeat top left;
+	border-color:#cc9933;
+}
+fieldset.welldone {
+	background:transparent url(bg-fieldset-welldone.gif) no-repeat 194px 19px;
+}
+fieldset.kindagood {
+	background:transparent url(bg-fieldset-kindagood.gif) no-repeat 194px 19px;
+}
+</style>
+<script type="text/javascript">
+// This function checks if the username field
+// is at least 6 characters long.
+// If so, it attaches class="welldone" to the 
+// containing fieldset.
+function checkUsernameForLength(whatYouTyped) {
+	var fieldset = whatYouTyped.parentNode;
+	var txt = whatYouTyped.value;
+	if (txt.length > 5) {
+		fieldset.className = "welldone";
+	}
+	else {
+		fieldset.className = "";
+	}
+}
+// If the password is at least 4 characters long, the containing 
+// fieldset is assigned class="kindagood".
+// If it's at least 8 characters long, the containing
+// fieldset is assigned class="welldone", to give the user
+// the indication that they've selected a harder-to-crack
+// password.
+function checkPassword(whatYouTyped) {
+	var fieldset = whatYouTyped.parentNode;
+	var txt = whatYouTyped.value;
+	if (txt.length > 3 && txt.length < 8) {
+		fieldset.className = "kindagood";
+	} else if (txt.length > 7) {
+		fieldset.className = "welldone";
+	} else {
+		fieldset.className = "";
+	}
+}
+// This function checks the email address to be sure
+// it follows a certain pattern:
+// blah@blah.blah
+// If so, it assigns class="welldone" to the containing
+// fieldset.
+function checkEmail(whatYouTyped) {
+	var fieldset = whatYouTyped.parentNode;
+	var txt = whatYouTyped.value;
+	if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(txt)) {
+		fieldset.className = "welldone";
+	} else {
+		fieldset.className = "";
+	}
+}
+// this part is for the form field hints to display
+// only on the condition that the text input has focus.
+// otherwise, it stays hidden.
+function addLoadEvent(func) {
+  var oldonload = window.onload;
+  if (typeof window.onload != 'function') {
+    window.onload = func;
+  } else {
+    window.onload = function() {
+      oldonload();
+      func();
+    }
+  }
+}
+function prepareInputsForHints() {
+  var inputs = document.getElementsByTagName("input");
+  for (var i=0; i<inputs.length; i++){
+    inputs[i].onfocus = function () {
+      this.parentNode.getElementsByTagName("span")[0].style.display = "inline";
+    }
+    inputs[i].onblur = function () {
+      this.parentNode.getElementsByTagName("span")[0].style.display = "none";
+    }
+  }
+}
+addLoadEvent(prepareInputsForHints);
+</script>
+</head>
+<body>
+<form
+	action="#"
+	name="basicform"
+	id="basicform" >
+<fieldset>
+	<label for="username">Choose a Username:</label>
+	<input
+		type="text"
+		id="username"
+		onkeyup="checkUsernameForLength(this);" />
+	<span class="hint">Usernames must be a least 6 characters in length.</span>
+</fieldset>
+<fieldset>
+	<label for="password">Enter a password:</label>
+	<input
+		type="password"
+		id="password"
+		onkeyup="checkPassword(this);" />
+	<span class="hint">The password can be any combination of characters, and must be at least 4 characters in length.  8 characters recommended!</span>
+</fieldset>
+<fieldset>
+	<label for="email">Enter your email address:</label>
+	<input
+		type="text"
+		id="email"
+		onkeyup="checkEmail(this);" />
+	<span class="hint">You can enter your real address without worry - we don't spam!</span>
+</fieldset>
+</form>
+</body>
+</html>
